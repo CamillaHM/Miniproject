@@ -1,6 +1,7 @@
 import socket
 import select
-
+import numpy as np
+import cv2
 HEADER_LENGTH = 10
 
 IP = "127.0.0.1"
@@ -28,6 +29,7 @@ sockets_list = [server_socket]
 
 # List of connected clients - socket as a key, user header and name as data
 clients = {}
+
 
 print(f'Listening for connections on {IP}:{PORT}...')
 
@@ -119,7 +121,10 @@ while True:
             user = clients[notified_socket]
 
             print(f'Received message from {user["data"].decode("utf-8")}: {message["data"].decode("utf-8")}')
-
+            image = np.zeros((512, 512, 3))
+            cv2.putText(image, message["data"].decode("utf-8"), (200, 200), 0, 1, 255)
+            cv2.imshow('Image', image)
+            cv2.waitKey(1)
             # Iterate over connected clients and broadcast message
             for client_socket in clients:
 
