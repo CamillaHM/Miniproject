@@ -4,8 +4,8 @@ import errno
 import sys
 HEADER_LENGTH = 10
 
-IP = "127.0.0.1"
-PORT = 1234
+IP = "172.24.213.173"
+PORT = 5000
 my_username = input("Username: ")
 
 # Create a socket
