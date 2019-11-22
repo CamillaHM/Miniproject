@@ -6,6 +6,8 @@ import numpy as np
 Port=1234
 IP="127.0.0.1"
 HeadLength=10
+textHeight = 30
+image = np.zeros((515, 515, 3))
 
 S=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 S.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
@@ -33,7 +35,11 @@ while True:
         else:
             Message=getMessage(notifySockets)
             print("Recieved message: " + Message["data"].decode("utf-8"))
-            image = np.zeros((512, 512, 3))
-            cv2.putText(image, Message["data"].decode("utf-8"), (200, 200), 0, 1, 255)
-            cv2.imshow('Image', image)
+
+            if textHeight >= 530:
+                textHeight = 30
+                image = np.zeros((515, 515, 3))
+            cv2.putText(image, Message["data"].decode("utf-8"), (5, textHeight), 0, 1, 255)
+            textHeight += 30
+            cv2.imshow("Chat", image)
             cv2.waitKey(1)
