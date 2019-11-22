@@ -3,7 +3,6 @@ import select
 import cv2
 
 
-
 Port=1234
 IP="127.0.0.1"
 HeadLength=10
@@ -24,9 +23,15 @@ def getMessage(clientSocket):
         return
     except:
         return False
-
 while True:
     readSockets,_,exceptionsSockets=select.select(socketsList,[],socketsList)
     for notifySockets in readSockets:
         if notifySockets==serverSocket:
             clientSocket,clientAddress=serverSocket.accept()
+            socketsList.append(clientSocket)
+        else:
+            Message=getMessage(notifySockets)
+            print(f'Received message:')
+            for clientSocket in Clients:
+                if clientSocket != notifySockets:
+                    clientSocket.send(Message['header'] + Message['data'])
