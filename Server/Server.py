@@ -2,7 +2,6 @@ import socket
 import select
 import cv2
 
-
 Port=1234
 IP="127.0.0.1"
 HeadLength=10
@@ -13,14 +12,14 @@ serverSocket.bind((IP, Port))
 serverSocket.listen()
 socketsList = [serverSocket]
 Clients = {}
-
+print("Started server")
 def getMessage(clientSocket):
     try:
         messageHead=clientSocket.recv(HeadLength)
         if not len(messageHead):
             return False
         messageLength=int(messageHead.decode('utf-8').strip())
-        return
+        return {'header': messageHead, 'data': clientSocket.recv(messageLength)}
     except:
         return False
 while True:
@@ -29,9 +28,7 @@ while True:
         if notifySockets==serverSocket:
             clientSocket,clientAddress=serverSocket.accept()
             socketsList.append(clientSocket)
+            print("New connection")
         else:
             Message=getMessage(notifySockets)
-            print(f'Received message:')
-            for clientSocket in Clients:
-                if clientSocket != notifySockets:
-                    clientSocket.send(Message['header'] + Message['data'])
+            print("Recieved message: " + Message["data"].decode("utf-8"))
