@@ -6,7 +6,7 @@ Port = 1234
 IP = "127.0.0.1"
 HeadLength = 10
 
-C=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+C = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 C.connect((IP, Port))
 
 while True:
