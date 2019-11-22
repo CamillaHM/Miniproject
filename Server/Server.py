@@ -8,28 +8,31 @@ Port = 1234
 IP = "127.0.0.1"
 HeadLength = 10
 textHeight = 30
+# Create a black image
 image = np.zeros((515, 515, 3))
-
-# Creates the server socket and binds it to the given IP and port.
+# Create socket as S
 S = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Set options of socket
 S.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+# Bind it to OP and Port
 S.bind((IP, Port))
+# Listen for connections
 S.listen()
 socketsList = [S]
 Clients = {}
 print("Started server")
 
-
 def getMessage(clientSocket):
     try:
+        # Get message length
         messageHead = clientSocket.recv(HeadLength)
         if not len(messageHead):
             return False
+        # Convert it to int
         messageLength = int(messageHead.decode('utf-8').strip())
         return {'header': messageHead, 'data': clientSocket.recv(messageLength)}
     except:
         return False
-
 
 while True:
     # Gets the list sockets which are ready to be read through select
@@ -43,13 +46,17 @@ while True:
             print("New connection")
             # If a message from a client is recieved
         else:
+            # Get that message
             Message = getMessage(notifySockets)
             print("Recieved message: " + Message["data"].decode("utf-8"))
-            # Creates Chat window and shows the messages on it
+            # If the text is going out of bounds of image, reset height
             if textHeight >= 530:
                 textHeight = 30
                 image = np.zeros((515, 515, 3))
+            # Put the received text in image
             cv2.putText(image, Message["data"].decode("utf-8"), (5, textHeight), 0, 1, 255)
+            # Add height for new line
             textHeight += 30
+            # Show chat
             cv2.imshow("Chat", image)
             cv2.waitKey(1)
