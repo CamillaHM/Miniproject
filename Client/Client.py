@@ -8,27 +8,37 @@ Port=1234
 IP="127.0.0.1"
 HeadLength=10
 # create the socket
-server_socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+serverSocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 # set socket options
-server_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+serverSocket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
 
 # bind port and ip to socket
-server_socket.bind((IP, Port))
+serverSocket.bind((IP, Port))
 
 # turn on listen
-server_socket.listen()
+serverSocket.listen()
 
 # list sockets
-sockets_list = [server_socket]
+socketsList = [serverSocket]
 
 # list clinets
-clients = {}
+Clients = {}
 
-def getMessage(client_socket):
+def getMessage(clientSocket):
 
     try:
         # get head
-        messageHead=client_socket.recv(HeadLength)
-    except
+        messageHead=clientSocket.recv(HeadLength)
+        if not len(messageHead):
+            return False
+        # make into int
+        messageLength=int(messageHead.decode('utf-8').strip())
+
+        return
+    except:
         return False
+
+
+while True:
+    readSockets,_,exceptionsSockets=select.select(socketsList,[],socketsList)
