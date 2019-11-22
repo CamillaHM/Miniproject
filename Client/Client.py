@@ -6,7 +6,7 @@ import cv2
 
 Port=1234
 IP="127.0.0.1"
-
+HeadLength=10
 # create the socket
 server_socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
@@ -25,3 +25,10 @@ sockets_list = [server_socket]
 # list clinets
 clients = {}
 
+def getMessage(client_socket):
+
+    try:
+        # get head
+        messageHead=client_socket.recv(HeadLength)
+    except
+        return False
