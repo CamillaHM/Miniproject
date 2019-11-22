@@ -1,44 +1,32 @@
 import socket
-import select
 import cv2
+import sys
 
+Port = 1234
+IP = "127.0.0.1"
+HeadLength = 10
 
-
-Port=1234
-IP="127.0.0.1"
-HeadLength=10
-# create the socket
-serverSocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-
-# set socket options
-serverSocket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-
-# bind port and ip to socket
-serverSocket.bind((IP, Port))
-
-# turn on listen
-serverSocket.listen()
-
-# list sockets
-socketsList = [serverSocket]
-
-# list clinets
-Clients = {}
-
-def getMessage(clientSocket):
-
-    try:
-        # get head
-        messageHead=clientSocket.recv(HeadLength)
-        if not len(messageHead):
-            return False
-        # make into int
-        messageLength=int(messageHead.decode('utf-8').strip())
-
-        return
-    except:
-        return False
-
+clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+clientSocket.connect((IP, Port))
+clientSocket.setblocking(False)
 
 while True:
-    readSockets,_,exceptionsSockets=select.select(socketsList,[],socketsList)
+    Message = input(f'')
+    if Message:
+        Message = Message.encode('utf-8')
+        messageHeader = f"{len(Message):<{HeadLength}}".encode('utf-8')
+        clientSocket.send(messageHeader + Message)
+
+    try:
+        while True:
+            usernameHeader = clientSocket.recv(HeadLength)
+
+            if not len(usernameHeader):
+                print("closed by server")
+                sys.exit()
+            messageHeader = clientSocket.recv(HeadLength)
+            messageLength = int(messageHeader.decode('utf-8').strip())
+            message = clientSocket.recv(messageLength).decode('utf-8')
+
+    except Exception as IOError:
+        sys.exit()
