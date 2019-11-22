@@ -6,8 +6,8 @@ Port = 1234
 IP = "127.0.0.1"
 HeadLength = 10
 
-clientSocket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-clientSocket.connect((IP, Port))
+C=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+C.connect((IP, Port))
 
 while True:
     Message = input("")
@@ -15,6 +15,6 @@ while True:
         if Message:
             Message = Message.encode('utf-8')
             messageHeader = f"{len(Message):<{HeadLength}}".encode('utf-8')
-            clientSocket.send(messageHeader + Message)
+            C.send(messageHeader + Message)
     except Exception as ex:
         sys.exit()
