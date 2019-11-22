@@ -14,13 +14,14 @@ image = np.zeros((515, 515, 3))
 S = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Set options of socket
 S.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-# Bind it to OP and Port
+# Bind it to IP and Port
 S.bind((IP, Port))
 # Listen for connections
 S.listen()
 socketsList = [S]
 Clients = {}
 print("Started server")
+
 
 def getMessage(clientSocket):
     try:
@@ -34,21 +35,22 @@ def getMessage(clientSocket):
     except:
         return False
 
+
 while True:
     # Gets the list sockets which are ready to be read through select
     readSockets, _, exceptionsSockets = select.select(socketsList, [], socketsList)
     for notifySockets in readSockets:
-        # If a new connection request is recieved
+        # If a new connection request is received
         if notifySockets == S:
             # The new connection is accepted
             clientSocket, clientAddress = S.accept()
             socketsList.append(clientSocket)
             print("New connection")
-            # If a message from a client is recieved
+            # If a message from a client is received
         else:
             # Get that message
             Message = getMessage(notifySockets)
-            print("Recieved message: " + Message["data"].decode("utf-8"))
+            print("Received message: " + Message["data"].decode("utf-8"))
             # If the text is going out of bounds of image, reset height
             if textHeight >= 530:
                 textHeight = 30

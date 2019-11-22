@@ -1,5 +1,4 @@
 import socket
-import cv2
 import sys
 
 # Defines the Port and IP
@@ -25,4 +24,3 @@ while True:
     # exit on exception
     except Exception as ex:
         sys.exit()
-
